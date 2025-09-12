@@ -49,7 +49,8 @@ jobs:
         echo "Deploying with Railway CLI..."
         echo "Token length: ${#RAILWAY_TOKEN}"
         echo "Token starts with: ${RAILWAY_TOKEN:0:10}..."
-        railway up --detach
+        # Try using the token as a service ID
+        railway up --detach --service ${{ secrets.RAILWAY_TOKEN }}
       working-directory: ./server
       env:
         RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
