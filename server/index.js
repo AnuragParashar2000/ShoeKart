@@ -9,7 +9,8 @@ const errorHandlerMiddleware = require("./middleware/error");
 const corsOptions = {
   origin: [
     'http://localhost:5173', // Local development
-    'https://shoe-54zpletb0-anuragparashar2000s-projects.vercel.app', // Your deployed Vercel URL
+    'https://shoe-3jh41fld6-anuragparashar2000s-projects.vercel.app', // Your deployed Vercel URL
+    'https://shoe-iota-three.vercel.app', // New Vercel URL
     'https://*.vercel.app' // Allow all Vercel preview deployments
   ],
   credentials: true,
