@@ -13,7 +13,9 @@ const corsOptions = {
     'http://localhost:5175', // Local development
     'https://shoe-3jh41fld6-anuragparashar2000s-projects.vercel.app', // Your deployed Vercel URL
     'https://shoe-iota-three.vercel.app', // Previous Vercel URL
-    'https://shoe-ioqbmkeim-anuragparashar2000s-projects.vercel.app', // New Vercel URL
+    'https://shoe-ioqbmkeim-anuragparashar2000s-projects.vercel.app', // Previous Vercel URL
+    'https://shoe-eo0pk44y0-anuragparashar2000s-projects.vercel.app', // Previous Vercel URL
+    'https://shoe-pdqaeg5li-anuragparashar2000s-projects.vercel.app', // New Vercel URL
     'https://*.vercel.app' // Allow all Vercel preview deployments
   ],
   credentials: true,

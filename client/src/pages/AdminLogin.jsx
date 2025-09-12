@@ -17,7 +17,7 @@ const AdminLogin = () => {
         toast.error("Please provide email and password");
         return;
       }
-      const response = await Axios.post("/adminLogin", user);
+      const response = await Axios.post("/api/v1/adminLogin", user);
       console.log(response);
 
       if (response.data.success === true) {

@@ -63,7 +63,7 @@ const SignUpPage = () => {
       setEmailStatus('checking');
       
       try {
-        const response = await Axios.get(`/check-email?email=${encodeURIComponent(user.email)}`);
+        const response = await Axios.get(`/api/v1/check-email?email=${encodeURIComponent(user.email)}`);
         if (response.data.success) {
           setEmailStatus(response.data.available ? 'available' : 'taken');
           if (!response.data.available) {
@@ -138,7 +138,7 @@ const SignUpPage = () => {
 
     try {
       console.log("Sending signup request:", user);
-      const response = await Axios.post("/register", user);
+      const response = await Axios.post("/api/v1/register", user);
       console.log("Signup response:", response);
       if (response.data.success === true) {
         toast.success("Account created successfully! Please login to continue.", {

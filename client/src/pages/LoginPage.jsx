@@ -99,7 +99,7 @@ const LoginPage = () => {
         return;
       }
       console.log("Sending login request:", user);
-      const response = await Axios.post("/login", user);
+      const response = await Axios.post("/api/v1/login", user);
       console.log("Login response:", response);
 
       if (response.data.success === true) {
