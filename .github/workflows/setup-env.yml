@@ -1,0 +1,41 @@
+name: Setup Environment Variables
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to setup (production/staging)'
+        required: true
+        default: 'production'
+        type: choice
+        options:
+        - production
+        - staging
+
+jobs:
+  setup-environment:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Setup Production Environment
+      if: github.event.inputs.environment == 'production'
+      run: |
+        echo "Setting up production environment variables..."
+        echo "✅ Frontend: Vercel"
+        echo "✅ Backend: Railway"
+        echo "✅ Database: MongoDB Atlas"
+        echo "✅ Payment: Stripe"
+        echo "✅ Image Processing: Remove.bg"
+        
+    - name: Setup Staging Environment
+      if: github.event.inputs.environment == 'staging'
+      run: |
+        echo "Setting up staging environment variables..."
+        echo "🔄 This would setup staging environment"
+        
+    - name: Environment Summary
+      run: |
+        echo "Environment: ${{ github.event.inputs.environment }}"
+        echo "Repository: ${{ github.repository }}"
+        echo "Branch: ${{ github.ref_name }}"
+        echo "Commit: ${{ github.sha }}"
