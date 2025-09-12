@@ -44,8 +44,18 @@ jobs:
       env:
         RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
       
+    - name: Setup Railway Config
+      run: |
+        mkdir -p ~/.railway
+        cat > ~/.railway/config.json << EOF
+        {
+          "user": {
+            "token": "${{ secrets.RAILWAY_TOKEN }}"
+          }
+        }
+        EOF
+        echo "✅ Railway config file created"
+      
     - name: Deploy to Railway
       run: railway up --detach
       working-directory: ./server
-      env:
-        RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
