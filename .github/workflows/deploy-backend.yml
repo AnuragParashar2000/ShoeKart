@@ -44,13 +44,10 @@ jobs:
       env:
         RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
       
-    - name: Setup Railway Authentication
-      run: |
-        mkdir -p ~/.railway
-        echo "{\"user\":{\"token\":\"${{ secrets.RAILWAY_TOKEN }}\"}}" > ~/.railway/config.json
-        echo "✅ Railway config created with API token"
-        cat ~/.railway/config.json
-      
     - name: Deploy to Railway
-      run: railway up --detach
+      run: |
+        echo "Deploying with Railway CLI..."
+        railway up --detach --service shoekart
       working-directory: ./server
+      env:
+        RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
