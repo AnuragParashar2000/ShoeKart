@@ -34,9 +34,16 @@ jobs:
       working-directory: ./server
       run: npm test --if-present
       
+    - name: Install Railway CLI
+      run: npm install -g @railway/cli
+      
+    - name: Login to Railway
+      run: railway login --token ${{ secrets.RAILWAY_TOKEN }}
+      
+    - name: Link Railway Project
+      run: railway link ${{ secrets.RAILWAY_PROJECT_ID }}
+      working-directory: ./server
+      
     - name: Deploy to Railway
-      uses: railwayapp/railway-deploy@v1
-      with:
-        railway-token: ${{ secrets.RAILWAY_TOKEN }}
-        service: ${{ secrets.RAILWAY_SERVICE_NAME }}
-        working-directory: ./server
+      run: railway up --detach
+      working-directory: ./server
