@@ -1,8 +1,8 @@
-# Shoekart
+# ShopKart
 
-Welcome to Shoekart – where style meets comfort! Shoekart is an e-commerce platform dedicated to buying shoes, built on the MERN (MongoDB, Express.js, React.js, Node.js) stack. Shoekart not only provides a user-friendly interface for customers to browse and purchase shoes but also includes an admin section for managing products, orders, and users. Additionally, it features a secure payment section powered by Stripe.
+Welcome to ShopKart – where style meets comfort! ShopKart is an e-commerce platform dedicated to buying shoes, built on the MERN (MongoDB, Express.js, React.js, Node.js) stack. ShopKart not only provides a user-friendly interface for customers to browse and purchase shoes but also includes an admin section for managing products, orders, and users. Additionally, it features a secure payment section powered by Stripe.
 
-![Shoekart Landing Page](./client/src/Images/readmeImage.png)
+![ShopKart Landing Page](./client/src/Images/readmeImage.png)
 
 ## Features
 
@@ -10,7 +10,7 @@ Welcome to Shoekart – where style meets comfort! Shoekart is an e-commerce pla
 
 - **User Authentication and Authorization (JWT):** Securely authenticate users and manage access to resources with JSON Web Tokens (JWT).
 
-- **Responsive Design:** Enjoy a seamless shopping experience across devices with Shoekart's responsive design, ensuring optimal performance on desktops, tablets, and smartphones.
+- **Responsive Design:** Enjoy a seamless shopping experience across devices with ShopKart's responsive design, ensuring optimal performance on desktops, tablets, and smartphones.
 
 - **Product Listing and Search:** Browse through an extensive catalog of shoe products with the ability to filter by categories, sizes, brands, and more.
 
@@ -38,16 +38,16 @@ Welcome to Shoekart – where style meets comfort! Shoekart is an e-commerce pla
 
 ## Demo
 
-Explore the project: [Shoekart](https://shoekart197.vercel.app)
+Explore the project: [ShopKart](https://shopkart197.vercel.app)
 
-To experience Shoekart as a demo user, navigate to [User Login](https://shoekart197.vercel.app/login) and use the following credentials:
+To experience ShopKart as a demo user, navigate to [User Login](https://shopkart197.vercel.app/login) and use the following credentials:
 
 ```plaintext
 Username: user@gmail.com
 Password: password
 ```
 
-You can access the admin section by navigating to [Admin Login](https://shoekart197.vercel.app/adminlogin) and using the following credentials:
+You can access the admin section by navigating to [Admin Login](https://shopkart197.vercel.app/adminlogin) and using the following credentials:
 
 ```plaintext
 Username: admin@gmail.com
@@ -56,12 +56,12 @@ Password: password
 
 ## Installation
 
-Follow these steps to set up Shoekart on your local machine:
+Follow these steps to set up ShopKart on your local machine:
 
 1.  **Clone the Repository:**
 
     ```bash
-    git clone https://github.com/SumilSuthar197/Shoekart.git
+    git clone https://github.com/SumilSuthar197/ShopKart.git
     ```
 
 2.  **Install Dependencies:**

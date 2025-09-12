@@ -21,7 +21,7 @@ const AdminSideBar = ({ toggleOpen }) => {
         <div className="sideBarLogo">
           <img src={logo} alt="logo" />
           <div>
-            <div className="sideBrandName">SHOEKART</div>
+            <div className="sideBrandName">SHOPKART</div>
             <Link
               to="/"
               className="sideBrandLink text-sm underline text-[#ccc] hover:text-white"

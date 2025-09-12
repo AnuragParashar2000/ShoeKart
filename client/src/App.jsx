@@ -13,6 +13,7 @@ import CheckoutSuccess from "./pages/CheckoutSuccess";
 import ProfileLayout from "./pages/ProfileLayout";
 import AdminLogin from "./pages/AdminLogin";
 import MyOrders from "./pages/MyOrders";
+import FavoritesPage from "./pages/FavoritesPage";
 import Axios from "./Axios";
 import useAuth from "../hooks/useAuth";
 import ProtectedRoute from "./utils/protectedRoute";
@@ -87,6 +88,14 @@ const App = () => {
           >
             <Route index element={<MyOrders />} />
           </Route>
+          <Route
+            path="/favorites"
+            element={
+              <ProtectedRoute>
+                <FavoritesPage />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/admin"
             element={

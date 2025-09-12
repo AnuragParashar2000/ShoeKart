@@ -45,7 +45,7 @@ const ProductForm = ({
         // Create a new FormData for the Cloudinary API
         formData = new FormData();
         formData.append("file", blob, "photo.png");
-        formData.append("upload_preset", "shoekart");
+        formData.append("upload_preset", "shopkart");
 
         const cloudinaryResponse = await axios.post(
           "https://api.cloudinary.com/v1_1/deohymauz/image/upload",
@@ -154,6 +154,20 @@ const ProductForm = ({
               onChange={handleInputChange}
               min={0}
               placeholder="Enter product price"
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="features">Product Features (one per line)</label>
+            <textarea
+              rows={4}
+              className="form-control"
+              id="features"
+              value={data.features ? data.features.join('\n') : ''}
+              onChange={(e) => {
+                const features = e.target.value.split('\n').filter(feature => feature.trim() !== '');
+                handleInputChange({ target: { id: 'features', value: features } });
+              }}
+              placeholder="Enter product features, one per line"
             />
           </div>
         </div>

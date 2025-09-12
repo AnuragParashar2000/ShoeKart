@@ -10,13 +10,33 @@ const order = require("../models/order");
 const register = asyncErrorHandler(async (req, res, next) => {
   const { name, email, password, role } = req.body;
 
-  const emailAlreadyExists = await user.findOne({ email });
-  if (emailAlreadyExists) {
-    return next(new errorHandler("Email already exists", 400));
-  }
-
+  // Check if all required fields are provided
   if (!name || !email || !password) {
     return next(new errorHandler("Please fill all fields", 400));
+  }
+
+  // Check if email already exists
+  const emailAlreadyExists = await user.findOne({ email });
+  if (emailAlreadyExists) {
+    return next(new errorHandler("Email already exists. Please use a different email address.", 400));
+  }
+
+  // Strong password validation
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+  if (!passwordRegex.test(password)) {
+    return next(new errorHandler("Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character (@$!%*?&)", 400));
+  }
+
+  // Email format validation
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    return next(new errorHandler("Please enter a valid email address", 400));
+  }
+
+  // Name validation (at least 2 characters, no numbers or special characters)
+  const nameRegex = /^[a-zA-Z\s]{2,}$/;
+  if (!nameRegex.test(name)) {
+    return next(new errorHandler("Name must be at least 2 characters long and contain only letters and spaces", 400));
   }
 
   await user.create({
@@ -29,6 +49,32 @@ const register = asyncErrorHandler(async (req, res, next) => {
   res.status(201).json({
     success: true,
     message: "User registered successfully",
+  });
+});
+
+const checkEmailAvailability = asyncErrorHandler(async (req, res, next) => {
+  const { email } = req.query;
+
+  if (!email) {
+    return next(new errorHandler("Email is required", 400));
+  }
+
+  // Email format validation
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    return res.status(200).json({
+      success: false,
+      available: false,
+      message: "Please enter a valid email address"
+    });
+  }
+
+  const emailExists = await user.findOne({ email });
+  
+  res.status(200).json({
+    success: true,
+    available: !emailExists,
+    message: emailExists ? "Email is already registered" : "Email is available"
   });
 });
 
@@ -192,7 +238,7 @@ const forgetPassword = asyncErrorHandler(async (req, res, next) => {
         <p>Please Note: This link is valid for 5 minutes.</p>
         <p>If you didn't request a password reset, please ignore this email or reply to let us know.</p>
         <p>Thanks</p>
-        <p>Team Shoekart</p>
+        <p>Team ShopKart</p>
       </div>
     </div>
   </div>
@@ -235,4 +281,5 @@ module.exports = {
   getOrder,
   forgetPassword,
   changeResetPassword,
+  checkEmailAvailability,
 };

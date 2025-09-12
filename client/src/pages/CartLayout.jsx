@@ -6,6 +6,7 @@ import useAuth from "../../hooks/useAuth";
 import TriangleLoader from "../components/TriangleLoader";
 import { toast } from "react-toastify";
 import EmptyImage from "../Images/empty-cart.png";
+import CheckoutModal from "../components/CheckoutModal";
 
 const CartLayout = () => {
   const { auth, setAuth } = useAuth();
@@ -13,6 +14,8 @@ const CartLayout = () => {
   const [loading, setLoading] = useState(true);
   const [couponCode, setCouponCode] = useState("");
   const [appliedCoupon, setAppliedCoupon] = useState(false);
+  const [couponDiscount, setCouponDiscount] = useState(0);
+  const [showCheckoutModal, setShowCheckoutModal] = useState(false);
 
   const token = localStorage.getItem("jwt");
   const updateData = useCallback(async (e) => {
@@ -49,34 +52,65 @@ const CartLayout = () => {
       setLoading(false);
     }
   };
-  const handleCheckout = async () => {
+  const handleCheckout = () => {
+    if (!data || data?.items.length <= 0 || !auth) {
+      toast.error("Please add items to cart and login to checkout");
+      return;
+    }
+    setShowCheckoutModal(true);
+  };
+  const applyCoupon = async (coupon) => {
+    if (!data || data.length <= 0) return toast.error("Cart is empty.");
+    if (!coupon.trim()) return toast.error("Please enter a coupon code.");
+    
     try {
-      const response = await Axios.post(
-        "/payment/create-checkout-session",
-        { coupon: appliedCoupon ? couponCode.toUpperCase() : "" },
-        { headers: { Authorization: localStorage.getItem("jwt") } }
-      );
-      console.log(response);
-
-      if (response.data.url) {
-        window.location.href = response.data.url;
+      // Validate coupon with Stripe
+      const response = await Axios.get(`/admin/coupons`, {
+        headers: { Authorization: localStorage.getItem("jwtAdmin") }
+      });
+      
+      if (response.data.success) {
+        const validCoupons = response.data.data;
+        const couponToCheck = coupon.toUpperCase().trim();
+        const matchedCoupon = validCoupons.find(c => c.id === couponToCheck);
+        
+        if (matchedCoupon) {
+          setCouponCode(coupon);
+          setAppliedCoupon(true);
+          setCouponDiscount(matchedCoupon.percent_off || 0);
+          toast.success(`Coupon applied successfully! ${matchedCoupon.percent_off}% off`);
+        } else {
+          toast.error("Invalid coupon code.");
+        }
+      } else {
+        toast.error("Unable to validate coupon. Please try again.");
       }
     } catch (error) {
-      console.log(error);
+      console.error('Coupon validation error:', error);
+      // Fallback to hardcoded coupons if API fails
+      const hardcodedCoupons = {
+        "SUMILSUTHAR197": 20,
+        "NIKE2024": 15
+      };
+      const couponToCheck = coupon.toUpperCase();
+      if (hardcodedCoupons[couponToCheck]) {
+        setCouponCode(coupon);
+        setAppliedCoupon(true);
+        setCouponDiscount(hardcodedCoupons[couponToCheck]);
+        toast.success(`Coupon applied successfully! ${hardcodedCoupons[couponToCheck]}% off`);
+      } else {
+        toast.error("Invalid coupon code.");
+      }
     }
   };
-  const applyCoupon = (coupon) => {
-    if (!data || data.length <= 0) return toast.error("Cart is empty.");
-    console.log(coupon.toUpperCase());
-    const listOfCoupons = ["SUMILSUTHAR197", "NIKE2024"];
-    if (listOfCoupons.includes(coupon.toUpperCase())) {
-      setCouponCode(coupon);
-      setAppliedCoupon(true);
-      toast.success("Coupon applied successfully!");
-    } else {
-      toast.error("Invalid coupon code.");
-    }
+
+  const removeCoupon = () => {
+    setCouponCode("");
+    setAppliedCoupon(false);
+    setCouponDiscount(0);
+    toast.success("Coupon removed successfully!");
   };
+
   useEffect(() => {
     if (localStorage.getItem("jwt") === null) {
       setLoading(false);
@@ -145,7 +179,13 @@ const CartLayout = () => {
               </p>
               <p>
                 <span>Giftcard/Discount code</span>
-                {/* <span>- ₹ 0</span> */}
+                {appliedCoupon && couponDiscount > 0 ? (
+                  <span style={{ color: '#28a745' }}>
+                    - ₹ {((data?.totalPrice || 0) * (couponDiscount / 100)).toFixed(2)}
+                  </span>
+                ) : (
+                  <span>- ₹ 0</span>
+                )}
               </p>
               <div className="couponInput">
                 <input
@@ -158,36 +198,78 @@ const CartLayout = () => {
                   onChange={(e) => setCouponCode(e.target.value)}
                   placeholder="Coupon Code"
                 />
-                <button
-                  type="button"
-                  disabled={appliedCoupon}
-                  className={appliedCoupon ? "disabledBtn" : ""}
-                  onClick={() => applyCoupon(couponCode)}
-                >
-                  Apply
-                </button>
+                {appliedCoupon ? (
+                  <button
+                    type="button"
+                    className="remove-coupon-btn"
+                    onClick={removeCoupon}
+                    style={{ 
+                      backgroundColor: '#dc3545', 
+                      color: 'white', 
+                      border: 'none',
+                      padding: '8px 12px',
+                      borderRadius: '4px',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    Remove
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => applyCoupon(couponCode)}
+                    style={{ 
+                      backgroundColor: '#007bff', 
+                      color: 'white', 
+                      border: 'none',
+                      padding: '8px 12px',
+                      borderRadius: '4px',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    Apply
+                  </button>
+                )}
               </div>
               <p className="cart-total">
                 <span>Total</span>
-                <span>₹ {(data?.totalPrice || 0).toFixed(2)}</span>
+                <span>
+                  ₹ {appliedCoupon && couponDiscount > 0 
+                    ? ((data?.totalPrice || 0) * (1 - couponDiscount / 100)).toFixed(2)
+                    : (data?.totalPrice || 0).toFixed(2)
+                  }
+                </span>
               </p>
             </div>
             <button
-              onClick={() => handleCheckout()}
+              onClick={handleCheckout}
               type="submit"
               className={
                 !data || data?.items.length <= 0 || !auth
                   ? "checkout-btn disabled"
                   : "checkout-btn"
               }
-              // className="checkout-btn"
               disabled={!data || data?.items.length <= 0 || !auth}
             >
-              checkout
+              Proceed to Checkout
             </button>
           </div>
         </div>
       </div>
+      
+      {/* Checkout Modal */}
+      <CheckoutModal
+        isOpen={showCheckoutModal}
+        onClose={() => setShowCheckoutModal(false)}
+        cartData={data}
+        totalPrice={appliedCoupon && couponDiscount > 0 
+          ? (data?.totalPrice || 0) * (1 - couponDiscount / 100)
+          : data?.totalPrice || 0
+        }
+        appliedCoupon={appliedCoupon}
+        couponCode={couponCode}
+        couponDiscount={couponDiscount}
+      />
     </div>
   );
 };

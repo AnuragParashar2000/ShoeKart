@@ -1,0 +1,238 @@
+.favorites-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  min-height: 80vh;
+}
+
+.favorites-header {
+  text-align: center;
+  margin-bottom: 40px;
+  padding: 20px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.favorites-header h1 {
+  font-size: 2.5rem;
+  color: #333;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.favorites-header p {
+  color: #666;
+  font-size: 1.1rem;
+}
+
+.favorites-empty {
+  text-align: center;
+  padding: 60px 20px;
+  background: #f8f9fa;
+  border-radius: 12px;
+  margin: 40px 0;
+}
+
+.favorites-empty h2 {
+  color: #333;
+  margin: 20px 0 10px;
+  font-size: 1.8rem;
+}
+
+.favorites-empty p {
+  color: #666;
+  margin-bottom: 30px;
+  font-size: 1.1rem;
+}
+
+.login-btn, .shop-btn {
+  display: inline-block;
+  background: #007bff;
+  color: white;
+  padding: 12px 30px;
+  text-decoration: none;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+}
+
+.login-btn:hover, .shop-btn:hover {
+  background: #0056b3;
+  color: white;
+  text-decoration: none;
+}
+
+.favorites-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 30px;
+  margin-top: 30px;
+}
+
+.favorite-item {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.favorite-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.favorite-image {
+  position: relative;
+  height: 250px;
+  overflow: hidden;
+}
+
+.favorite-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.favorite-item:hover .favorite-image img {
+  transform: scale(1.05);
+}
+
+.remove-favorite-btn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.remove-favorite-btn:hover {
+  background: white;
+  transform: scale(1.1);
+}
+
+.favorite-info {
+  padding: 20px;
+}
+
+.favorite-info h3 {
+  font-size: 1.2rem;
+  color: #333;
+  margin-bottom: 10px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.favorite-price {
+  font-size: 1.3rem;
+  color: #007bff;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.favorite-date {
+  color: #666;
+  font-size: 0.9rem;
+  margin-bottom: 20px;
+}
+
+.favorite-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.view-product-btn {
+  flex: 1;
+  background: #f8f9fa;
+  color: #333;
+  padding: 10px 15px;
+  text-decoration: none;
+  border-radius: 6px;
+  text-align: center;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  border: 1px solid #dee2e6;
+}
+
+.view-product-btn:hover {
+  background: #e9ecef;
+  color: #333;
+  text-decoration: none;
+}
+
+.add-to-cart-btn {
+  flex: 1;
+  background: #28a745;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.add-to-cart-btn:hover {
+  background: #218838;
+}
+
+.add-to-cart-btn svg {
+  font-size: 1.1rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .favorites-container {
+    padding: 15px;
+  }
+  
+  .favorites-header h1 {
+    font-size: 2rem;
+  }
+  
+  .favorites-grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+  }
+  
+  .favorite-image {
+    height: 200px;
+  }
+  
+  .favorite-actions {
+    flex-direction: column;
+  }
+  
+  .view-product-btn,
+  .add-to-cart-btn {
+    flex: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .favorites-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .favorites-header h1 {
+    font-size: 1.8rem;
+  }
+  
+  .favorite-info {
+    padding: 15px;
+  }
+}

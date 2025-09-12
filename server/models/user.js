@@ -53,6 +53,17 @@ const userSchema = new mongoose.Schema(
         default: 0,
       },
     },
+    favorites: [{
+      productId: {
+        type: mongoose.Types.ObjectId,
+        ref: "Product",
+        required: true,
+      },
+      addedAt: {
+        type: Date,
+        default: Date.now,
+      },
+    }],
     resetToken: {
       type: String,
     },

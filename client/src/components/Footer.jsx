@@ -121,8 +121,8 @@ const Footer = () => {
                     <IoIosMail />
                   </span>
                   <p>
-                    <Link to="mailto:knowmore@shoekart.in">
-                      knowmore@shoekart.in
+                    <Link to="mailto:knowmore@shopkart.in">
+                      knowmore@shopkart.in
                     </Link>
                   </p>
                 </li>
@@ -130,7 +130,7 @@ const Footer = () => {
             </div>
           </div>
           <div className="copyrightText">
-            <p>Copyright ©{new Date().getFullYear()} Shoekart</p>
+            <p>Copyright ©{new Date().getFullYear()} ShopKart</p>
             <p>
               Made By{" "}
               <Link

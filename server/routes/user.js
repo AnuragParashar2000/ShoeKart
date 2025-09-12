@@ -8,6 +8,7 @@ const {
   adminLogin,
   forgetPassword,
   changeResetPassword,
+  checkEmailAvailability,
 } = require("../controllers/user");
 
 router.route("/register").post(register);
@@ -17,5 +18,6 @@ router.route("/verify").get(verifyUser);
 router.route("/orders").get(getOrder);
 router.route("/forgetpassword/:email").get(forgetPassword);
 router.route("/resetpassword").post(changeResetPassword);
+router.route("/check-email").get(checkEmailAvailability);
 
 module.exports = router;

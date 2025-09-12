@@ -24,7 +24,7 @@ const Navbar = () => {
         <FiMenu />
       </div>
       <span className="logo">
-        <Link to="/">SHOEKART</Link>
+        <Link to="/">SHOPKART</Link>
         {/* <img src={logo} alt="LOGO" /> */}
       </span>
       <div className={isOpen ? "nav-links-md" : "nav-links"}>
@@ -112,6 +112,9 @@ const Navbar = () => {
                 <ul className="dropdown">
                   <li>
                     <Link to="/orders">Orders</Link>
+                  </li>
+                  <li>
+                    <Link to="/favorites">Favorites</Link>
                   </li>
                   <li>
                     <button

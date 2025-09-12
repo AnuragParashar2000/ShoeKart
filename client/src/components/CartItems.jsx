@@ -9,6 +9,7 @@ import useAuth from "../../hooks/useAuth";
 const CartItems = ({ cartId, data, qty, size, deleteItem, updateData }) => {
   const [currentQty, setCurrentQty] = useState(qty);
   const [debounceQty, setDebounceQty] = useState(null);
+  const [isMovingToFavorites, setIsMovingToFavorites] = useState(false);
   const { auth, setAuth } = useAuth();
   const firstUpdate = useRef(true);
   useEffect(() => {
@@ -52,6 +53,30 @@ const CartItems = ({ cartId, data, qty, size, deleteItem, updateData }) => {
       changeQty();
     }
   }, [debounceQty]);
+
+  const moveToFavorites = async () => {
+    setIsMovingToFavorites(true);
+    try {
+      const response = await Axios.post(
+        `/favorites/move-from-cart/${cartId}`,
+        {},
+        {
+          headers: {
+            Authorization: localStorage.getItem("jwt"),
+          },
+        }
+      );
+      
+      if (response.data.success) {
+        toast.success("Product added to favorites successfully!");
+        // Don't update cart data or cart size since item stays in cart
+      }
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Failed to move to favorites");
+    } finally {
+      setIsMovingToFavorites(false);
+    }
+  };
   return (
     <tr>
       <td>
@@ -72,8 +97,15 @@ const CartItems = ({ cartId, data, qty, size, deleteItem, updateData }) => {
               <button onClick={deleteItem}>
                 <AiFillDelete /> delete item
               </button>
-              <button>
-                <AiFillHeart /> move to favorite
+              <button 
+                onClick={moveToFavorites}
+                disabled={isMovingToFavorites}
+                style={{ 
+                  opacity: isMovingToFavorites ? 0.6 : 1,
+                  cursor: isMovingToFavorites ? 'not-allowed' : 'pointer'
+                }}
+              >
+                <AiFillHeart /> {isMovingToFavorites ? 'Adding...' : 'Add to favorites'}
               </button>
             </div>
           </div>

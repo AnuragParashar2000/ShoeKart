@@ -5,7 +5,18 @@ const cors = require("cors");
 const connectDatabase = require("./db/connect");
 const errorHandlerMiddleware = require("./middleware/error");
 
-app.use(cors());
+// CORS configuration
+const corsOptions = {
+  origin: [
+    'http://localhost:5173', // Local development
+    'https://your-vercel-app.vercel.app', // Replace with your actual Vercel URL
+    'https://*.vercel.app' // Allow all Vercel preview deployments
+  ],
+  credentials: true,
+  optionsSuccessStatus: 200
+};
+
+app.use(cors(corsOptions));
 app.use(express.static("./public"));
 
 // import routes
@@ -16,6 +27,8 @@ const paymentRoute = require("./routes/payments");
 const adminRoute = require("./routes/admin");
 const brandRoute = require("./routes/brands");
 const categoryRoute = require("./routes/category");
+const deliveryRoute = require("./routes/delivery");
+const favoritesRoute = require("./routes/favorites");
 const { webhook } = require("./controllers/payments");
 const { verifyToken, adminOnly } = require("./middleware/auth");
 
@@ -25,7 +38,7 @@ app.use(express.json());
 //using routes
 app.get("/", (req, res) => {
   res.json({
-    project: "Shoekart API",
+    project: "ShopKart API",
     description:
       "This is an API for an shoes E-commerce application. It provides endpoints for managing products, orders, and users.",
     author: {
@@ -36,12 +49,15 @@ app.get("/", (req, res) => {
   });
 });
 app.use("/api/v1/payment", verifyToken, paymentRoute);
+app.use("/api/v1/orders", verifyToken, paymentRoute);
 app.use("/api/v1/", userRoute);
 app.use("/api/v1/product", productRoute);
 app.use("/api/v1/cart", verifyToken, cartRoute);
+app.use("/api/v1/favorites", verifyToken, favoritesRoute);
 app.use("/api/v1/admin", adminOnly, adminRoute);
 app.use("/api/v1/brands", adminOnly, brandRoute);
 app.use("/api/v1/category", adminOnly, categoryRoute);
+app.use("/api/v1/delivery", deliveryRoute);
 
 app.get("*", (req, res) => {
   //   res.sendFile(path.resolve(__dirname, "../frontend/build/index.html"));

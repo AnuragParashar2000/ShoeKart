@@ -10,7 +10,7 @@ const sendEmail = async (options) => {
   });
 
   const message = {
-    from: `Shoekart <${process.env.SMTP_EMAIL}>`,
+    from: `ShopKart <${process.env.SMTP_EMAIL}>`,
     to: options.email,
     subject: options.subject,
     html: options.message,

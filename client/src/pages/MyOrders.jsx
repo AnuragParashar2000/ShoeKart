@@ -13,6 +13,10 @@ const MyOrders = () => {
   const [showModal, setShowModal] = useState(false);
   const [currentProductId, setCurrentProductId] = useState(null);
   const [currentOrderId, setCurrentOrderId] = useState(null);
+  const [showCancelModal, setShowCancelModal] = useState(false);
+  const [cancellingOrderId, setCancellingOrderId] = useState(null);
+  const [cancelReason, setCancelReason] = useState("");
+  const [isCancelling, setIsCancelling] = useState(false);
   const navigate = useNavigate();
   const fetchData = async () => {
     try {
@@ -62,6 +66,56 @@ const MyOrders = () => {
       console.log(error);
     }
   };
+
+  const openCancelModal = (orderId) => {
+    console.log('Order ID received:', orderId);
+    console.log('Order ID type:', typeof orderId);
+    if (!orderId) {
+      toast.error("Order ID is missing. Cannot cancel order.");
+      return;
+    }
+    setCancellingOrderId(orderId);
+    setShowCancelModal(true);
+  };
+
+  const cancelOrder = async () => {
+    if (!cancelReason.trim()) {
+      toast.error("Please provide a reason for cancellation");
+      return;
+    }
+
+    console.log('Cancelling order with ID:', cancellingOrderId);
+    console.log('Cancel reason:', cancelReason);
+
+    setIsCancelling(true);
+    try {
+      const response = await Axios.put(
+        `/orders/${cancellingOrderId}/cancel`,
+        { reason: cancelReason },
+        {
+          headers: {
+            Authorization: localStorage.getItem("jwt"),
+          },
+        }
+      );
+
+      if (response.data.success) {
+        toast.success("Order cancelled successfully");
+        fetchData();
+        setShowCancelModal(false);
+        setCancelReason("");
+        setCancellingOrderId(null);
+      }
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Failed to cancel order");
+    } finally {
+      setIsCancelling(false);
+    }
+  };
+
+  const canCancelOrder = (order) => {
+    return order.delivered?.toLowerCase() === 'pending' || order.delivered?.toLowerCase() === 'processing';
+  };
   useEffect(() => {
     fetchData();
   }, []);
@@ -82,6 +136,7 @@ const MyOrders = () => {
               <th className="order-subheader order-th">Order Date</th>
               <th className="order-subheader order-th">Status</th>
               <th className="order-subheader order-th">Total Price</th>
+              <th className="order-subheader order-th">Actions</th>
             </tr>
           </thead>
           <tbody className="order-table-tbody">
@@ -144,8 +199,30 @@ const MyOrders = () => {
                 <td className="order-td">
                   {new Date(item.createdAt).toDateString()}
                 </td>
-                <td className="order-td">{item.delivered}</td>
+                <td className="order-td">
+                  <span className={`status-badge status-${item.delivered?.toLowerCase() || 'pending'}`}>
+                    {item.delivered?.charAt(0).toUpperCase() + item.delivered?.slice(1) || 'Pending'}
+                  </span>
+                  {item.delivered?.toLowerCase() === 'cancelled' && item.cancellation && (
+                    <div className="cancellation-info">
+                      <small>Cancelled on: {new Date(item.cancellation.cancelledAt).toDateString()}</small>
+                      {item.cancellation.cancellationReason && (
+                        <small>Reason: {item.cancellation.cancellationReason}</small>
+                      )}
+                    </div>
+                  )}
+                </td>
                 <td className="order-td">₹{item.totalPrice}</td>
+                <td className="order-td">
+                  {canCancelOrder(item) && (
+                    <button
+                      className="cancel-order-btn"
+                      onClick={() => openCancelModal(item.id || item._id)}
+                    >
+                      Cancel Order
+                    </button>
+                  )}
+                </td>
               </tr>
             ))}
           </tbody>
@@ -165,6 +242,46 @@ const MyOrders = () => {
             submitReview(review, currentProductId, currentOrderId)
           }
         />
+      )}
+
+      {showCancelModal && (
+        <div className="modal-overlay">
+          <div className="modal-content cancel-modal">
+            <h3>Cancel Order</h3>
+            <p>Are you sure you want to cancel this order? This action cannot be undone.</p>
+            <div className="form-group">
+              <label htmlFor="cancelReason">Reason for cancellation:</label>
+              <textarea
+                id="cancelReason"
+                value={cancelReason}
+                onChange={(e) => setCancelReason(e.target.value)}
+                placeholder="Please provide a reason for cancelling this order..."
+                rows="3"
+                required
+              />
+            </div>
+            <div className="modal-actions">
+              <button
+                className="btn-secondary"
+                onClick={() => {
+                  setShowCancelModal(false);
+                  setCancelReason("");
+                  setCancellingOrderId(null);
+                }}
+                disabled={isCancelling}
+              >
+                Keep Order
+              </button>
+              <button
+                className="btn-danger"
+                onClick={cancelOrder}
+                disabled={isCancelling}
+              >
+                {isCancelling ? "Cancelling..." : "Cancel Order"}
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

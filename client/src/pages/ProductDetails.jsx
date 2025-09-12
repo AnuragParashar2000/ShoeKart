@@ -13,6 +13,9 @@ const ProductDetails = () => {
   const [data, setData] = useState([]);
   const [size, setSize] = useState("");
   const [loading, setLoading] = useState(true);
+  const [pincode, setPincode] = useState("");
+  const [deliveryInfo, setDeliveryInfo] = useState(null);
+  const [checkingDelivery, setCheckingDelivery] = useState(false);
   const navigate = useNavigate();
   const { auth, setAuth } = useAuth();
   useEffect(() => {
@@ -67,6 +70,39 @@ const ProductDetails = () => {
       console.log(error);
     }
   };
+
+  const handlePincodeCheck = async () => {
+    if (!pincode) {
+      toast.error("Please enter a PIN code");
+      return;
+    }
+
+    if (pincode.length !== 6) {
+      toast.error("Please enter a valid 6-digit PIN code");
+      return;
+    }
+
+    setCheckingDelivery(true);
+    try {
+      const response = await Axios.post("/delivery/check", {
+        pincode: pincode
+      });
+
+      if (response.data.success) {
+        setDeliveryInfo(response.data.data);
+        toast.success(`Delivery available to ${response.data.data.city}`);
+      } else {
+        setDeliveryInfo(null);
+        toast.error(response.data.message);
+      }
+    } catch (error) {
+      setDeliveryInfo(null);
+      toast.error(error?.response?.data?.message || "Failed to check delivery");
+    } finally {
+      setCheckingDelivery(false);
+    }
+  };
+
   if (loading) return <TriangleLoader height="500px" />;
   return (
     <section className="product-bg">
@@ -134,26 +170,17 @@ const ProductDetails = () => {
         </h3>
         <h3 className="pDescTitle">Features:</h3>
         <div style={{ marginLeft: "15px" }}>
-          {" "}
-          <ol>
-            <li>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</li>
-            <li>Integer ut justo quis diam finibus lobortis vel at dui.</li>
-            <li>
-              Morbi ultricies leo sit amet nisl suscipit, et vulputate orci
-              fringilla.
-            </li>
-            <li>
-              Nullam sit amet lacus ut nibh pharetra rutrum venenatis ac purus.
-            </li>
-            <li>Sed ut arcu dapibus, viverra ex vitae, fermentum libero.</li>
-            <li>Fusce eget mauris in elit ultricies vehicula.</li>
-            <li>Vivamus tincidunt ligula id sollicitudin finibus.</li>
-            <li>Nullam facilisis enim viverra nulla malesuada consequat.</li>
-            <li>
-              Nullam feugiat turpis ullamcorper augue fringilla, at facilisis
-              magna dignissim.
-            </li>
-          </ol>
+          {data.features && data.features.length > 0 ? (
+            <ol>
+              {data.features.map((feature, index) => (
+                <li key={index}>{feature}</li>
+              ))}
+            </ol>
+          ) : (
+            <p style={{ color: "#666", fontStyle: "italic" }}>
+              No features available for this product.
+            </p>
+          )}
         </div>
         <h3 className="pDescTitle">Delivery Option</h3>
         <div>
@@ -164,18 +191,45 @@ const ProductDetails = () => {
               max={999999}
               min={0}
               placeholder="Enter Pincode"
+              value={pincode}
+              onChange={(e) => {
+                const value = e.target.value.slice(0, 6);
+                setPincode(value);
+              }}
               onInput={(e) => {
                 e.target.value = Math.max(0, parseInt(e.target.value))
                   .toString()
                   .slice(0, 6);
               }}
             />
-            <button className="pincode-check">check</button>
+            <button 
+              className="pincode-check" 
+              onClick={handlePincodeCheck}
+              disabled={checkingDelivery}
+            >
+              {checkingDelivery ? "Checking..." : "Check"}
+            </button>
           </div>
-          <h5>
-            Please enter PIN code to check delivery time & Pay on Delivery
-            Availability
-          </h5>
+          
+          {deliveryInfo ? (
+            <div style={{ marginTop: "10px", padding: "10px", backgroundColor: "#f0f8ff", borderRadius: "5px" }}>
+              <h5 style={{ color: "#0066cc", margin: "0 0 5px 0" }}>
+                ✅ Delivery Available to {deliveryInfo.city}
+              </h5>
+              <p style={{ margin: "5px 0", fontSize: "14px" }}>
+                <strong>Delivery Time:</strong> {deliveryInfo.deliveryTime}
+              </p>
+              <p style={{ margin: "5px 0", fontSize: "14px" }}>
+                <strong>Pay on Delivery:</strong> {deliveryInfo.codAvailable ? "✅ Available" : "❌ Not Available"}
+              </p>
+            </div>
+          ) : (
+            <h5>
+              Please enter PIN code to check delivery time & Pay on Delivery
+              Availability
+            </h5>
+          )}
+          
           <ul type="none">
             <li>100% Original Products</li>
             <li>Pay on delivery might be available</li>
