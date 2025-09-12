@@ -33,24 +33,9 @@ jobs:
     - name: Install Railway CLI
       run: npm install -g @railway/cli
       
-    - name: Verify Railway Token
-      run: |
-        if [ -z "${{ secrets.RAILWAY_TOKEN }}" ]; then
-          echo "❌ RAILWAY_TOKEN is empty or not set"
-          exit 1
-        else
-          echo "✅ RAILWAY_TOKEN is set (length: ${#RAILWAY_TOKEN})"
-        fi
-      env:
-        RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-      
     - name: Deploy to Railway
       run: |
         echo "Deploying with Railway CLI..."
-        echo "Token length: ${#RAILWAY_TOKEN}"
-        echo "Token starts with: ${RAILWAY_TOKEN:0:10}..."
-        # Try using the token as a service ID
-        railway up --detach --service ${{ secrets.RAILWAY_TOKEN }}
+        # Try deploying without authentication (using linked project)
+        railway up --detach
       working-directory: ./server
-      env:
-        RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
