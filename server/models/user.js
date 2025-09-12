@@ -64,10 +64,10 @@ const userSchema = new mongoose.Schema(
         default: Date.now,
       },
     }],
-    resetToken: {
+    resetPasswordToken: {
       type: String,
     },
-    resetTokenExpiration: {
+    resetPasswordExpires: {
       type: Date,
     },
   },

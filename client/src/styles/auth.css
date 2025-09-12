@@ -74,6 +74,13 @@
 .login-button:hover {
   background-color: #6286a0;
 }
+.forget-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1rem;
+}
+
 .forget-button button {
   border: none;
   background-color: transparent;
@@ -86,6 +93,19 @@
 }
 .forget-button button:hover {
   color: #6286a0;
+}
+
+.forgot-password-link {
+  color: #007bff;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.forgot-password-link:hover {
+  color: #0056b3;
+  text-decoration: underline;
 }
 .signup-link {
   text-decoration: none;

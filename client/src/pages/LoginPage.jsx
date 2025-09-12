@@ -88,7 +88,6 @@ const LoginPage = () => {
   const navigate = useNavigate();
   const { setAuth } = useAuth();
   const [user, setUser] = useState({ email: "", password: "", role: "user" });
-  const [showForgetPassword, setShowForgetPassword] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -162,18 +161,15 @@ const LoginPage = () => {
             </button>
           </form>
           <div className="forget-button">
-            <button onClick={() => setShowForgetPassword(true)} type="button">
-              Forget password?
-            </button>
+            <Link to="/forgot-password" className="forgot-password-link">
+              Forgot password?
+            </Link>
           </div>
         </div>
       </div>
       <div className="login-div div2">
         <img className="login-image-r" src={loginImage} alt="image" />
       </div>
-      {showForgetPassword && (
-        <ForgetPasswordModal onClose={() => setShowForgetPassword(false)} />
-      )}
     </div>
   );
 };

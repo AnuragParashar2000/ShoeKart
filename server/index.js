@@ -29,6 +29,7 @@ const brandRoute = require("./routes/brands");
 const categoryRoute = require("./routes/category");
 const deliveryRoute = require("./routes/delivery");
 const favoritesRoute = require("./routes/favorites");
+const passwordResetRoute = require("./routes/passwordReset");
 const { webhook } = require("./controllers/payments");
 const { verifyToken, adminOnly } = require("./middleware/auth");
 
@@ -58,6 +59,7 @@ app.use("/api/v1/admin", adminOnly, adminRoute);
 app.use("/api/v1/brands", adminOnly, brandRoute);
 app.use("/api/v1/category", adminOnly, categoryRoute);
 app.use("/api/v1/delivery", deliveryRoute);
+app.use("/api/v1/password-reset", passwordResetRoute);
 
 app.get("*", (req, res) => {
   //   res.sendFile(path.resolve(__dirname, "../frontend/build/index.html"));
