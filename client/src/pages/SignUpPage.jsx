@@ -16,8 +16,9 @@ const SignUpPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      console.log("Sending signup request:", user);
       const response = await Axios.post("/register", user);
-      console.log(response);
+      console.log("Signup response:", response);
       if (response.data.success === true) {
         toast.success("Account created successfully ", {
           position: "bottom-right",
@@ -29,7 +30,9 @@ const SignUpPage = () => {
         });
       }
     } catch (error) {
-      toast.error(error.response.data.message || "Something went wrong", {
+      console.error("Signup error:", error);
+      console.error("Error response:", error.response);
+      toast.error(error.response?.data?.message || "Something went wrong", {
         position: "bottom-right",
       });
     }

@@ -54,11 +54,20 @@ app.use(errorHandlerMiddleware);
 const port = process.env.PORT || 5000;
 const StartServer = async () => {
   try {
+    // Start server first
     app.listen(port, "0.0.0.0", () => {
       console.log(`Server is running on http://localhost:${port}`);
     });
 
-    await connectDatabase(process.env.MONGO_URI);
+    // Try to connect to database in background
+    setTimeout(async () => {
+      try {
+        await connectDatabase(process.env.MONGO_URI);
+      } catch (dbError) {
+        console.log("Database connection failed, but server is running:", dbError.message);
+        console.log("Please install and start MongoDB to use full functionality");
+      }
+    }, 1000);
   } catch (error) {
     console.log(error);
   }

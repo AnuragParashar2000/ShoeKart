@@ -83,21 +83,37 @@ const Dashboard = () => {
   };
   const options1 = {
     responsive: true,
+    maintainAspectRatio: false,
     plugins: {
       legend: { display: false },
       title: {
-        display: true,
-        text: "Monthly Sales Amount for the Current Year",
+        display: false,
       },
     },
+    scales: {
+      y: {
+        beginAtZero: true,
+        ticks: {
+          callback: function(value) {
+            return '₹' + value;
+          }
+        }
+      }
+    }
   };
   const options2 = {
     responsive: true,
+    maintainAspectRatio: false,
     plugins: {
-      legend: { position: "top" },
+      legend: { 
+        position: "bottom",
+        labels: {
+          padding: 20,
+          usePointStyle: true
+        }
+      },
       title: {
-        display: true,
-        text: "Percentage Distribution of Order Status for Current Month",
+        display: false,
       },
     },
   };
@@ -113,10 +129,24 @@ const Dashboard = () => {
       </div>
       <div className="graphBox">
         <div className="graph-box box-1">
-          <Doughnut data={data2} options={options2} />
+          <h3>Order Status Distribution</h3>
+          {data.totalOrders === 0 ? (
+            <div className="no-data-message">
+              <p>No orders yet. Start selling to see order status distribution!</p>
+            </div>
+          ) : (
+            <Doughnut data={data2} options={options2} />
+          )}
         </div>
         <div className="graph-box box-2">
-          <Bar data={data1} options={options1} />
+          <h3>Monthly Sales</h3>
+          {data.totalSales === "0.00" ? (
+            <div className="no-data-message">
+              <p>No sales data yet. Start selling to see monthly sales chart!</p>
+            </div>
+          ) : (
+            <Bar data={data1} options={options1} />
+          )}
         </div>
       </div>
     </div>

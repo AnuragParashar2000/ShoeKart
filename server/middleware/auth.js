@@ -5,6 +5,9 @@ const asyncErrorHandler = require("./asyncErrorHandler");
 const errorHandler = require("../utils/errorHandler");
 
 const adminOnly = asyncErrorHandler(async (req, res, next) => {
+  if (!req.headers.authorization) {
+    return next(new errorHandler("Authorization header not found", 401));
+  }
   const token = req.headers.authorization.split(" ")[1];
   if (!token) return next(new errorHandler("Token not found", 401));
   const { id, email } = jwt.verify(token, secret);
@@ -19,6 +22,9 @@ const adminOnly = asyncErrorHandler(async (req, res, next) => {
 });
 
 const verifyToken = asyncErrorHandler(async (req, res, next) => {
+  if (!req.headers.authorization) {
+    return next(new errorHandler("Authorization header not found", 401));
+  }
   const token = req.headers.authorization.split(" ")[1];
   if (!token) return next(new errorHandler("Token not found", 401));
   const { id, email } = jwt.verify(token, secret);

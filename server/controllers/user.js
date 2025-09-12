@@ -8,7 +8,7 @@ const errorHandler = require("../utils/errorHandler");
 const order = require("../models/order");
 
 const register = asyncErrorHandler(async (req, res, next) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, role } = req.body;
 
   const emailAlreadyExists = await user.findOne({ email });
   if (emailAlreadyExists) {
@@ -23,6 +23,7 @@ const register = asyncErrorHandler(async (req, res, next) => {
     name,
     email,
     password,
+    role: role || "user",
   });
 
   res.status(201).json({

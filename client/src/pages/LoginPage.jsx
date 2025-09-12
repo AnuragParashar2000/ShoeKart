@@ -99,8 +99,9 @@ const LoginPage = () => {
         });
         return;
       }
+      console.log("Sending login request:", user);
       const response = await Axios.post("/login", user);
-      console.log(response);
+      console.log("Login response:", response);
 
       if (response.data.success === true) {
         localStorage.setItem("jwt", "Bearer " + response.data.token);
@@ -115,8 +116,9 @@ const LoginPage = () => {
         });
       }
     } catch (error) {
-      console.log(error);
-      toast.error(error.response.data.message, {
+      console.error("Login error:", error);
+      console.error("Error response:", error.response);
+      toast.error(error.response?.data?.message || "Something went wrong", {
         position: "bottom-right",
       });
     }

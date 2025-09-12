@@ -82,6 +82,15 @@ const Navbar = () => {
         >
           Contact
         </NavLink>
+        <NavLink
+          to="/adminLogin"
+          className="nav-link"
+          onClick={() => {
+            setIsOpen(!isOpen);
+          }}
+        >
+          Admin
+        </NavLink>
       </div>
       <div className="nav-button">
         <div className="nav-btn">

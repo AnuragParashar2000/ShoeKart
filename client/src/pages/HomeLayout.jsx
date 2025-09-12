@@ -17,7 +17,14 @@ const HomeLayout = () => {
         setData(response.data);
         setLoading(false);
       } catch (error) {
-        console.log(error);
+        console.log("API Error:", error);
+        // Set default data when API fails
+        setData({
+          featured: [],
+          trending: [],
+          newArrivals: []
+        });
+        setLoading(false);
       }
     };
     fetchData();

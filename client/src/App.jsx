@@ -35,7 +35,6 @@ const App = () => {
   const { setAuth } = useAuth();
   const ScrollToTop = () => {
     const { pathname } = useLocation();
-    console.log("ScrollToTop");
     useEffect(() => {
       window.scrollTo(0, 0);
     }, [pathname]);
