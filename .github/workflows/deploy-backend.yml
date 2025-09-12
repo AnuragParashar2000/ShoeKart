@@ -47,7 +47,9 @@ jobs:
     - name: Deploy to Railway
       run: |
         echo "Deploying with Railway CLI..."
-        railway up --detach --service shoekart
+        echo "Token length: ${#RAILWAY_TOKEN}"
+        echo "Token starts with: ${RAILWAY_TOKEN:0:10}..."
+        railway up --detach
       working-directory: ./server
       env:
         RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
