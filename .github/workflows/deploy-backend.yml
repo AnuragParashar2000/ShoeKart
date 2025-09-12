@@ -33,6 +33,17 @@ jobs:
     - name: Install Railway CLI
       run: npm install -g @railway/cli
       
+    - name: Verify Railway Token
+      run: |
+        if [ -z "${{ secrets.RAILWAY_TOKEN }}" ]; then
+          echo "❌ RAILWAY_TOKEN is empty or not set"
+          exit 1
+        else
+          echo "✅ RAILWAY_TOKEN is set (length: ${#RAILWAY_TOKEN})"
+        fi
+      env:
+        RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+      
     - name: Deploy to Railway
       run: railway up --detach
       working-directory: ./server
