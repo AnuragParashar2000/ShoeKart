@@ -122,3 +122,5 @@ Follow these steps to set up ShopKart on your local machine:
 ## Authors
 
 Made with ❤️ by **[Sumil Suthar](https://sumilsuthar.me/)**
+# Automated Deployment Test - Fri Sep 12 22:59:45 IST 2025
+# Automated Deployment Test - Fri Sep 12 22:59:55 IST 2025
