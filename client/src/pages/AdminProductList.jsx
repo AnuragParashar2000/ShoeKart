@@ -28,10 +28,10 @@ const AdminProductList = () => {
       if (!token) {
         return toast.error("Access denied.");
       }
-      const response = await Axios.get("/admin/products", {
+      const response = await Axios.get("/api/v1/admin/products", {
         params: { limit, page, searchTerm },
         headers: {
-          Authorization: token,
+          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -50,10 +50,10 @@ const AdminProductList = () => {
         return toast.error("Access denied.");
       }
       const response = await Axios.put(
-        `/admin/product/${id}`,
+        `/api/v1/admin/product/${id}`,
         {},
         {
-          headers: { Authorization: token },
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
       if (response.data.success) {

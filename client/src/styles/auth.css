@@ -247,61 +247,66 @@
 
 .strength-bar {
   flex: 1;
-  height: 4px;
+  height: 6px;
   background-color: #e5e7eb;
-  border-radius: 2px;
+  border-radius: 3px;
   overflow: hidden;
 }
 
 .strength-fill {
   height: 100%;
-  transition: all 0.3s ease;
-  border-radius: 2px;
+  transition: all 0.4s ease;
+  border-radius: 3px;
 }
 
-.strength-0, .strength-1 {
-  width: 20%;
+.strength-fill.strength-0 {
+  width: 10%;
   background-color: #ef4444;
 }
 
-.strength-2 {
-  width: 40%;
+.strength-fill.strength-1 {
+  width: 25%;
+  background-color: #ef4444;
+}
+
+.strength-fill.strength-2 {
+  width: 45%;
   background-color: #f59e0b;
 }
 
-.strength-3 {
-  width: 60%;
-  background-color: #f59e0b;
+.strength-fill.strength-3 {
+  width: 65%;
+  background-color: #fbbf24;
 }
 
-.strength-4 {
-  width: 80%;
+.strength-fill.strength-4 {
+  width: 85%;
   background-color: #10b981;
 }
 
-.strength-5 {
+.strength-fill.strength-5 {
   width: 100%;
-  background-color: #10b981;
+  background-color: #059669;
 }
 
 .strength-text {
   font-size: 0.75rem;
-  font-weight: 500;
-  min-width: 50px;
+  font-weight: 600;
+  min-width: 60px;
 }
 
-.strength-0 + .strength-text,
-.strength-1 + .strength-text {
+.password-strength:has(.strength-0) .strength-text,
+.password-strength:has(.strength-1) .strength-text {
   color: #ef4444;
 }
 
-.strength-2 + .strength-text,
-.strength-3 + .strength-text {
+.password-strength:has(.strength-2) .strength-text,
+.password-strength:has(.strength-3) .strength-text {
   color: #f59e0b;
 }
 
-.strength-4 + .strength-text,
-.strength-5 + .strength-text {
+.password-strength:has(.strength-4) .strength-text,
+.password-strength:has(.strength-5) .strength-text {
   color: #10b981;
 }
 

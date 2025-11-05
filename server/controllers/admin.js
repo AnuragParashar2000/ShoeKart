@@ -76,9 +76,28 @@ const getAllOrders = asyncErrorHandler(async (req, res) => {
 
 const updateOrderStatus = asyncErrorHandler(async (req, res) => {
   const { id, status, paymentId } = req.body;
+  
+  if (!id || !status) {
+    return res.status(400).json({
+      success: false,
+      message: "Order ID and status are required",
+    });
+  }
+  
   await order.findByIdAndUpdate(id, { delivery_status: status });
-  if (status === "Cancelled") {
-    await stripe.refunds.create({ payment_intent: paymentId });
+  
+  if (status === "Cancelled" && paymentId) {
+    try {
+      // Only process refund if Stripe key is configured and paymentId exists
+      if (process.env.STRIPE_SECRET_KEY && process.env.STRIPE_SECRET_KEY !== 'your_stripe_secret_key') {
+        await stripe.refunds.create({ payment_intent: paymentId });
+      } else {
+        console.log("Stripe not configured, skipping refund for payment:", paymentId);
+      }
+    } catch (stripeError) {
+      console.error("Stripe refund error:", stripeError);
+      // Continue with order cancellation even if refund fails
+    }
   }
 
   res.status(200).json({
@@ -88,27 +107,44 @@ const updateOrderStatus = asyncErrorHandler(async (req, res) => {
 });
 
 const getCoupons = asyncErrorHandler(async (req, res) => {
-  const coupons = await stripe.coupons.list({
-    limit: 100,
-  });
-  data = coupons.data.map((coupon) => ({
-    id: coupon.id,
-    percent_off: coupon.percent_off,
-    duration:
-      coupon.duration == "repeating"
-        ? coupon.duration_in_months
-        : coupon.duration,
-    duration_in_months: coupon.duration_in_months,
-    max_redemptions: coupon.max_redemptions || 999,
-    redemption_left: `${coupon.times_redeemed}/${
-      coupon.max_redemptions || "∞"
-    }`,
-  }));
+  try {
+    if (!process.env.STRIPE_SECRET_KEY || process.env.STRIPE_SECRET_KEY === 'your_stripe_secret_key') {
+      return res.status(200).json({
+        success: true,
+        data: [],
+        message: "Stripe not configured"
+      });
+    }
+    
+    const coupons = await stripe.coupons.list({
+      limit: 100,
+    });
+    data = coupons.data.map((coupon) => ({
+      id: coupon.id,
+      percent_off: coupon.percent_off,
+      duration:
+        coupon.duration == "repeating"
+          ? coupon.duration_in_months
+          : coupon.duration,
+      duration_in_months: coupon.duration_in_months,
+      max_redemptions: coupon.max_redemptions || 999,
+      redemption_left: `${coupon.times_redeemed}/${
+        coupon.max_redemptions || "∞"
+      }`,
+    }));
 
-  res.status(200).json({
-    success: true,
-    data,
-  });
+    res.status(200).json({
+      success: true,
+      data,
+    });
+  } catch (error) {
+    console.error("Stripe error:", error);
+    res.status(200).json({
+      success: true,
+      data: [],
+      message: "Error fetching coupons from Stripe"
+    });
+  }
 });
 
 const createCoupon = asyncErrorHandler(async (req, res) => {

@@ -59,11 +59,11 @@ const AddProducts = () => {
         return toast.error("Please fill all the fields.");
       }
       const response = await Axios.post(
-        "/product/create",
+        "/api/v1/product/create",
         { ...data, sizeQuantity: validFields, image: link },
         {
           headers: {
-            Authorization: token,
+            Authorization: `Bearer ${token}`,
           },
         }
       );

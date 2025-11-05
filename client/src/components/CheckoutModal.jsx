@@ -213,7 +213,7 @@ const CheckoutModal = ({ isOpen, onClose, cartData, totalPrice, appliedCoupon, c
       };
       
       const response = await Axios.post(
-        "/payment/create-checkout-session",
+        "/api/v1/payment/create-checkout-session",
         checkoutData,
         { headers: { Authorization: localStorage.getItem("jwt") } }
       );

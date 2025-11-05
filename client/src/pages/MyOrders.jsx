@@ -8,7 +8,7 @@ import FormReviews from "../components/FormReviews";
 import { toast } from "react-toastify";
 
 const MyOrders = () => {
-  const [data, setData] = useState(null);
+  const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [currentProductId, setCurrentProductId] = useState(null);
@@ -26,9 +26,12 @@ const MyOrders = () => {
         },
       });
       console.log(response.data.orders);
-      setData(response.data.orders);
+      // Ensure orders is an array before setting it
+      setData(Array.isArray(response.data?.orders) ? response.data.orders : []);
       setLoading(false);
     } catch (error) {
+      console.error("Error fetching orders:", error);
+      setData([]); // Set to empty array on error
       setLoading(false);
     }
   };
@@ -227,7 +230,7 @@ const MyOrders = () => {
             ))}
           </tbody>
         </table>
-        {(!data || data.length <= 0) && (
+        {data.length === 0 && (
           <div className="empty-cart">
             <img src={EmptyImage} alt="empty-cart" />
             <p>Looks like you haven't purchased any items yet.</p>

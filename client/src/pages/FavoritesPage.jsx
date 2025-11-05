@@ -15,7 +15,7 @@ const FavoritesPage = () => {
 
   const fetchFavorites = async () => {
     try {
-      const response = await Axios.get('/favorites', {
+      const response = await Axios.get('/api/v1/favorites', {
         headers: {
           Authorization: localStorage.getItem('jwt'),
         },
@@ -34,7 +34,7 @@ const FavoritesPage = () => {
 
   const removeFromFavorites = async (productId) => {
     try {
-      const response = await Axios.delete(`/favorites/remove/${productId}`, {
+      const response = await Axios.delete(`/api/v1/favorites/remove/${productId}`, {
         headers: {
           Authorization: localStorage.getItem('jwt'),
         },
@@ -52,7 +52,7 @@ const FavoritesPage = () => {
   const addToCart = async (productId, size = 7) => {
     try {
       const response = await Axios.post(
-        '/cart/add',
+        '/api/v1/cart/add',
         { productId, size, qty: 1 },
         {
           headers: {

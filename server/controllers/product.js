@@ -19,7 +19,7 @@ const getProducts = asyncErrorHandler(async (req, res, next) => {
   const page = parseInt(req.query.page) - 1 || 0;
   const limit = parseInt(req.query.limit) || 12;
   const search = req.query.search || "";
-  const sortParam = req.query.sortBy.value || "createdAt_asc";
+  const sortParam = req.query.sortBy?.value || "createdAt_asc";
   const colors = req.query.color;
   const sizes = req.query.size;
   const brand = req.query.brand;
@@ -29,8 +29,8 @@ const getProducts = asyncErrorHandler(async (req, res, next) => {
   const query = {
     name: { $regex: search, $options: "i" },
     price: {
-      $gte: parseInt(priceRange.minPrice) || 0,
-      $lte: parseInt(priceRange.maxPrice) || Infinity,
+      $gte: parseInt(priceRange?.minPrice) || 0,
+      $lte: parseInt(priceRange?.maxPrice) || Infinity,
     },
     isActive: true,
   };

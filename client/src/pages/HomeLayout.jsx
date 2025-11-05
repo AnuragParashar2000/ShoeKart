@@ -13,7 +13,7 @@ const HomeLayout = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await Axios.get("/product/featured");
+        const response = await Axios.get("/api/v1/product/featured");
         setData(response.data);
         setLoading(false);
       } catch (error) {

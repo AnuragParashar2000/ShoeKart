@@ -28,7 +28,7 @@ const CartItems = ({ cartId, data, qty, size, deleteItem, updateData }) => {
   const changeQty = async () => {
     try {
       const response = await Axios.put(
-        `/cart/update/${cartId}`,
+        `/api/v1/cart/update/${cartId}`,
         {
           qty: debounceQty,
         },
@@ -58,7 +58,7 @@ const CartItems = ({ cartId, data, qty, size, deleteItem, updateData }) => {
     setIsMovingToFavorites(true);
     try {
       const response = await Axios.post(
-        `/favorites/move-from-cart/${cartId}`,
+        `/api/v1/favorites/move-from-cart/${cartId}`,
         {},
         {
           headers: {

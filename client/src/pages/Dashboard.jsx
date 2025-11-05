@@ -42,20 +42,22 @@ const Dashboard = () => {
         if (!token) {
           return toast.error("Access denied. Please login first.");
         }
-        const res = await Axios.get("/admin/info", {
+        const res = await Axios.get("/api/v1/admin/info", {
           headers: {
-            Authorization: token,
+            Authorization: `Bearer ${token}`,
           },
         });
-        const myData = res.data.bar1.data.map((item) => Number(item));
-        setData({
-          ...res.data,
-          bar1: { labels: res.data.bar1.labels, data: myData },
-        });
+        if (res.data && res.data.bar1 && res.data.bar1.data) {
+          const myData = res.data.bar1.data.map((item) => Number(item));
+          setData({
+            ...res.data,
+            bar1: { labels: res.data.bar1.labels, data: myData },
+          });
+        }
         setLoading(false);
       } catch (error) {
         console.log(error);
-        toast.error("Something went wrong");
+        toast.error(error.response?.data?.message || "Something went wrong");
         setLoading(false);
       }
     };

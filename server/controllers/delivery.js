@@ -1,73 +1,5 @@
 const asyncErrorHandler = require("../middleware/asyncErrorHandler");
-
-// Sample PIN code data - In a real application, this would come from a database or external API
-const PIN_CODE_DATA = {
-  // Major cities - 1-2 days delivery, COD available
-  "110001": { deliveryTime: "1-2 days", codAvailable: true, city: "New Delhi" },
-  "400001": { deliveryTime: "1-2 days", codAvailable: true, city: "Mumbai" },
-  "560001": { deliveryTime: "1-2 days", codAvailable: true, city: "Bangalore" },
-  "600001": { deliveryTime: "1-2 days", codAvailable: true, city: "Chennai" },
-  "700001": { deliveryTime: "1-2 days", codAvailable: true, city: "Kolkata" },
-  "380001": { deliveryTime: "1-2 days", codAvailable: true, city: "Ahmedabad" },
-  "500001": { deliveryTime: "1-2 days", codAvailable: true, city: "Hyderabad" },
-  "302001": { deliveryTime: "1-2 days", codAvailable: true, city: "Jaipur" },
-  "411001": { deliveryTime: "1-2 days", codAvailable: true, city: "Pune" },
-  "110002": { deliveryTime: "1-2 days", codAvailable: true, city: "New Delhi" },
-  "110003": { deliveryTime: "1-2 days", codAvailable: true, city: "New Delhi" },
-  "110004": { deliveryTime: "1-2 days", codAvailable: true, city: "New Delhi" },
-  "110005": { deliveryTime: "1-2 days", codAvailable: true, city: "New Delhi" },
-  "110006": { deliveryTime: "1-2 days", codAvailable: true, city: "New Delhi" },
-  "110007": { deliveryTime: "1-2 days", codAvailable: true, city: "New Delhi" },
-  "110008": { deliveryTime: "1-2 days", codAvailable: true, city: "New Delhi" },
-  "110009": { deliveryTime: "1-2 days", codAvailable: true, city: "New Delhi" },
-  "110010": { deliveryTime: "1-2 days", codAvailable: true, city: "New Delhi" },
-  
-  // Tier 2 cities - 2-3 days delivery, COD available
-  "201301": { deliveryTime: "2-3 days", codAvailable: true, city: "Noida" },
-  "201302": { deliveryTime: "2-3 days", codAvailable: true, city: "Noida" },
-  "201303": { deliveryTime: "2-3 days", codAvailable: true, city: "Noida" },
-  "201304": { deliveryTime: "2-3 days", codAvailable: true, city: "Noida" },
-  "201305": { deliveryTime: "2-3 days", codAvailable: true, city: "Noida" },
-  "201306": { deliveryTime: "2-3 days", codAvailable: true, city: "Noida" },
-  "201307": { deliveryTime: "2-3 days", codAvailable: true, city: "Noida" },
-  "201308": { deliveryTime: "2-3 days", codAvailable: true, city: "Noida" },
-  "201309": { deliveryTime: "2-3 days", codAvailable: true, city: "Noida" },
-  "201310": { deliveryTime: "2-3 days", codAvailable: true, city: "Noida" },
-  "122001": { deliveryTime: "2-3 days", codAvailable: true, city: "Gurgaon" },
-  "122002": { deliveryTime: "2-3 days", codAvailable: true, city: "Gurgaon" },
-  "122003": { deliveryTime: "2-3 days", codAvailable: true, city: "Gurgaon" },
-  "122004": { deliveryTime: "2-3 days", codAvailable: true, city: "Gurgaon" },
-  "122005": { deliveryTime: "2-3 days", codAvailable: true, city: "Gurgaon" },
-  "122006": { deliveryTime: "2-3 days", codAvailable: true, city: "Gurgaon" },
-  "122007": { deliveryTime: "2-3 days", codAvailable: true, city: "Gurgaon" },
-  "122008": { deliveryTime: "2-3 days", codAvailable: true, city: "Gurgaon" },
-  "122009": { deliveryTime: "2-3 days", codAvailable: true, city: "Gurgaon" },
-  "122010": { deliveryTime: "2-3 days", codAvailable: true, city: "Gurgaon" },
-  
-  // Tier 3 cities - 3-5 days delivery, COD available
-  "141001": { deliveryTime: "3-5 days", codAvailable: true, city: "Ludhiana" },
-  "141002": { deliveryTime: "3-5 days", codAvailable: true, city: "Ludhiana" },
-  "141003": { deliveryTime: "3-5 days", codAvailable: true, city: "Ludhiana" },
-  "141004": { deliveryTime: "3-5 days", codAvailable: true, city: "Ludhiana" },
-  "141005": { deliveryTime: "3-5 days", codAvailable: true, city: "Ludhiana" },
-  "141006": { deliveryTime: "3-5 days", codAvailable: true, city: "Ludhiana" },
-  "141007": { deliveryTime: "3-5 days", codAvailable: true, city: "Ludhiana" },
-  "141008": { deliveryTime: "3-5 days", codAvailable: true, city: "Ludhiana" },
-  "141009": { deliveryTime: "3-5 days", codAvailable: true, city: "Ludhiana" },
-  "141010": { deliveryTime: "3-5 days", codAvailable: true, city: "Ludhiana" },
-  
-  // Remote areas - 5-7 days delivery, COD not available
-  "744101": { deliveryTime: "5-7 days", codAvailable: false, city: "Port Blair" },
-  "744102": { deliveryTime: "5-7 days", codAvailable: false, city: "Port Blair" },
-  "744103": { deliveryTime: "5-7 days", codAvailable: false, city: "Port Blair" },
-  "744104": { deliveryTime: "5-7 days", codAvailable: false, city: "Port Blair" },
-  "744105": { deliveryTime: "5-7 days", codAvailable: false, city: "Port Blair" },
-  "744106": { deliveryTime: "5-7 days", codAvailable: false, city: "Port Blair" },
-  "744107": { deliveryTime: "5-7 days", codAvailable: false, city: "Port Blair" },
-  "744108": { deliveryTime: "5-7 days", codAvailable: false, city: "Port Blair" },
-  "744109": { deliveryTime: "5-7 days", codAvailable: false, city: "Port Blair" },
-  "744110": { deliveryTime: "5-7 days", codAvailable: false, city: "Port Blair" },
-};
+const axios = require("axios");
 
 const checkDelivery = asyncErrorHandler(async (req, res) => {
   const { pincode } = req.body;
@@ -88,33 +20,67 @@ const checkDelivery = asyncErrorHandler(async (req, res) => {
     });
   }
 
-  // Check if PIN code exists in our data
-  const deliveryInfo = PIN_CODE_DATA[pincode];
-
-  if (!deliveryInfo) {
-    return res.status(404).json({
-      success: false,
-      message: "Delivery not available to this PIN code",
+  try {
+    // Use India Post API to get pincode details
+    const response = await axios.get(`https://api.postalpincode.in/pincode/${pincode}`);
+    
+    if (response.data && response.data[0] && response.data[0].Status === "Success") {
+      const postOffice = response.data[0].PostOffice[0];
+      const city = postOffice.District || postOffice.Block || postOffice.Name;
+      const state = postOffice.State;
+      
+      // Determine delivery time based on state/region
+      let deliveryTime = "3-5 days";
+      let codAvailable = true;
+      
+      // Major metro cities - faster delivery
+      const metroCities = ["Delhi", "Mumbai", "Bangalore", "Chennai", "Kolkata", "Hyderabad", "Pune", "Ahmedabad"];
+      if (metroCities.some(metro => city.toLowerCase().includes(metro.toLowerCase()))) {
+        deliveryTime = "1-2 days";
+        codAvailable = true;
+      }
+      // Tier 2 cities
+      else if (["Noida", "Gurgaon", "Ghaziabad", "Faridabad", "Jaipur", "Lucknow", "Kanpur", "Nagpur", "Indore", "Thane", "Bhopal", "Visakhapatnam", "Patna", "Vadodara", "Ludhiana"].some(city2 => city.toLowerCase().includes(city2.toLowerCase()))) {
+        deliveryTime = "2-3 days";
+        codAvailable = true;
+      }
+      // Remote areas (Islands, North-East, J&K, Ladakh)
+      else if (["Andaman", "Nicobar", "Lakshadweep", "Arunachal", "Mizoram", "Nagaland", "Manipur", "Tripura", "Meghalaya", "Sikkim", "Jammu", "Kashmir", "Ladakh"].some(remote => state.toLowerCase().includes(remote.toLowerCase()))) {
+        deliveryTime = "5-7 days";
+        codAvailable = false;
+      }
+      
+      return res.status(200).json({
+        success: true,
+        message: "Delivery information retrieved successfully",
+        data: {
+          pincode,
+          deliveryTime,
+          codAvailable,
+          city: `${city}, ${state}`
+        }
+      });
+    } else {
+      // Pincode not found in India Post database
+      return res.status(404).json({
+        success: false,
+        message: "Invalid PIN code or delivery not available to this location"
+      });
+    }
+  } catch (error) {
+    console.error("Error fetching pincode data:", error);
+    // Fallback to default delivery info
+    return res.status(200).json({
+      success: true,
+      message: "Delivery information retrieved successfully",
       data: {
         pincode,
-        deliveryTime: "Not available",
-        codAvailable: false,
-        city: "Unknown"
+        deliveryTime: "3-5 days",
+        codAvailable: true,
+        city: "Your Location"
       }
     });
   }
-
-  // Return delivery information
-  res.status(200).json({
-    success: true,
-    message: "Delivery information retrieved successfully",
-    data: {
-      pincode,
-      deliveryTime: deliveryInfo.deliveryTime,
-      codAvailable: deliveryInfo.codAvailable,
-      city: deliveryInfo.city
-    }
-  });
 });
 
 module.exports = {

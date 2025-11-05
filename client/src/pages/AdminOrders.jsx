@@ -23,10 +23,10 @@ const AdminOrders = () => {
       if (!token) {
         return toast.error("Access denied.");
       }
-      const response = await Axios.get("/admin/order", {
+      const response = await Axios.get("/api/v1/admin/order", {
         params: { limit, page },
         headers: {
-          Authorization: token,
+          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -46,11 +46,11 @@ const AdminOrders = () => {
         return toast.error("Access denied.");
       }
       const response = await Axios.put(
-        "/admin/order",
+        "/api/v1/admin/order",
         { id, status, paymentId },
         {
           headers: {
-            Authorization: token,
+            Authorization: `Bearer ${token}`,
           },
         }
       );

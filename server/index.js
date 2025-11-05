@@ -15,7 +15,11 @@ const corsOptions = {
     'https://shoe-iota-three.vercel.app', // Previous Vercel URL
     'https://shoe-ioqbmkeim-anuragparashar2000s-projects.vercel.app', // Previous Vercel URL
     'https://shoe-eo0pk44y0-anuragparashar2000s-projects.vercel.app', // Previous Vercel URL
-    'https://shoe-pdqaeg5li-anuragparashar2000s-projects.vercel.app', // New Vercel URL
+    'https://shoe-pdqaeg5li-anuragparashar2000s-projects.vercel.app', // Previous Vercel URL
+    'https://shoe-cjc0iy70f-anuragparashar2000s-projects.vercel.app', // Previous Vercel URL
+    'https://shoe-78dwhxx5k-anuragparashar2000s-projects.vercel.app', // Previous Vercel URL
+    'https://shoe-ha2r5frlg-anuragparashar2000s-projects.vercel.app', // Previous Vercel URL
+    'https://shoe-jbn72tut7-anuragparashar2000s-projects.vercel.app', // New Vercel URL
     'https://*.vercel.app' // Allow all Vercel preview deployments
   ],
   credentials: true,

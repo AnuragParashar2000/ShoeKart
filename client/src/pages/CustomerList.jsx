@@ -13,9 +13,9 @@ const CustomerList = () => {
         if (!token) {
           return toast.error("Access denied. Please login first.");
         }
-        const response = await Axios.get("/admin/users", {
+        const response = await Axios.get("/api/v1/admin/users", {
           headers: {
-            Authorization: token,
+            Authorization: `Bearer ${token}`,
           },
         });
         if (response.data.success) {

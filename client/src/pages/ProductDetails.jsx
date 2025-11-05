@@ -21,7 +21,7 @@ const ProductDetails = () => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await Axios.get(`/product/${slug}`);
+        const response = await Axios.get(`/api/v1/product/${slug}`);
         setData(response.data.data);
         console.log(response.data.data);
         setLoading(false);
@@ -49,7 +49,7 @@ const ProductDetails = () => {
       }
       const token = localStorage.getItem("jwt");
       const response = await Axios.post(
-        "/cart/add",
+        "/api/v1/cart/add",
         {
           productId: data._id,
           qty: 1,
@@ -84,7 +84,7 @@ const ProductDetails = () => {
 
     setCheckingDelivery(true);
     try {
-      const response = await Axios.post("/delivery/check", {
+      const response = await Axios.post("/api/v1/delivery/check", {
         pincode: pincode
       });
 

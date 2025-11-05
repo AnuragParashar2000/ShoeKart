@@ -20,35 +20,55 @@ const ProductForm = ({
   const handleFileChange = async (event) => {
     const file = event.target.files[0];
     if (file) {
-      let formData = new FormData();
-      formData.append("size", "auto");
-      formData.append("image_file", file);
       try {
-        const response = await axios({
-          method: "post",
-          url: "https://api.remove.bg/v1.0/removebg",
-          data: formData,
-          responseType: "arraybuffer",
-          headers: {
-            "X-Api-Key": `${import.meta.env.VITE_REACT_APP_REMOVEBG_KEY}`,
-          },
-        });
-
-        if (response.status !== 200) {
-          toast.error("Error removing background");
+        // Check if file is an image
+        if (!file.type.startsWith('image/')) {
+          toast.error("Please upload an image file");
           return;
         }
-        console.log(response);
-        // Create a Blob from the response data
-        const blob = new Blob([response.data], { type: "image/png" });
 
-        // Create a new FormData for the Cloudinary API
-        formData = new FormData();
-        formData.append("file", blob, "photo.png");
-        formData.append("upload_preset", "shopkart");
+        toast.info("Uploading image...");
+
+        // Try with background removal first if API key is available
+        const removeBgKey = import.meta.env.VITE_REACT_APP_REMOVEBG_KEY;
+        let imageBlob = file;
+
+        if (removeBgKey && removeBgKey !== 'your_removebg_key') {
+          try {
+            let formData = new FormData();
+            formData.append("size", "auto");
+            formData.append("image_file", file);
+
+            const bgRemoveResponse = await axios({
+              method: "post",
+              url: "https://api.remove.bg/v1.0/removebg",
+              data: formData,
+              responseType: "arraybuffer",
+              headers: {
+                "X-Api-Key": removeBgKey,
+              },
+            });
+
+            if (bgRemoveResponse.status === 200) {
+              imageBlob = new Blob([bgRemoveResponse.data], { type: "image/png" });
+              toast.success("Background removed successfully");
+            }
+          } catch (bgError) {
+            console.warn("Background removal failed, uploading original image:", bgError);
+            toast.warning("Uploading without background removal");
+          }
+        }
+
+        // Upload to Cloudinary
+        const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME || "deohymauz";
+        const uploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET || "shopkart";
+        
+        const formData = new FormData();
+        formData.append("file", imageBlob);
+        formData.append("upload_preset", uploadPreset);
 
         const cloudinaryResponse = await axios.post(
-          "https://api.cloudinary.com/v1_1/deohymauz/image/upload",
+          `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
           formData,
           {
             headers: {
@@ -58,9 +78,25 @@ const ProductForm = ({
         );
 
         changeLink(cloudinaryResponse.data.secure_url);
-        toast.success(cloudinaryResponse.data.secure_url);
+        toast.success("Image uploaded successfully!");
       } catch (error) {
-        console.error("Request failed:", error);
+        console.error("Upload failed:", error);
+        console.error("Error details:", error.response?.data);
+        
+        // If Cloudinary fails, provide temporary base64 preview
+        if (error.response?.status === 400) {
+          toast.error("Cloudinary upload failed. Please configure your Cloudinary account with an 'unsigned' upload preset named 'shopkart'.");
+          
+          // Create a temporary base64 preview (for testing only)
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            changeLink(reader.result);
+            toast.warning("Using temporary image preview. This won't persist after refresh.");
+          };
+          reader.readAsDataURL(file);
+        } else {
+          toast.error(error?.response?.data?.error?.message || "Failed to upload image. Please try again.");
+        }
       }
     }
   };
@@ -78,7 +114,7 @@ const ProductForm = ({
   useEffect(() => {
     const fetchOptions = async () => {
       try {
-        const res = await Axios.get("product/options");
+        const res = await Axios.get("/api/v1/product/options");
         console.log(res.data);
         setOptions({ ...res.data });
         // setOptions(res.data.brandOptions);

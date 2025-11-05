@@ -96,11 +96,11 @@ const UpdateProducts = () => {
       }
 
       const response = await Axios.put(
-        `/product/update/${slug}`,
+        `/api/v1/product/update/${slug}`,
         { ...data, sizeQuantity: validFields, image: link },
         {
           headers: {
-            Authorization: token,
+            Authorization: `Bearer ${token}`,
           },
         }
       );

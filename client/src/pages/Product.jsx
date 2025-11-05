@@ -29,9 +29,14 @@ const Product = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await Axios.get("/product/filter", {
+        const response = await Axios.get("/api/v1/product/filter", {
           params: {
-            ...filters,
+            sortBy: filters.sortBy?.value || "createdAt_asc",
+            size: filters.size,
+            color: filters.color,
+            brand: filters.brand,
+            category: filters.category,
+            price: filters.price,
             search: debouncedValue,
             page: currentPage,
             limit: 12,
@@ -48,6 +53,14 @@ const Product = () => {
         console.log(response.data);
       } catch (error) {
         console.log(error);
+        setProducts([]);
+        setTotalPages(1);
+        setOptions({
+          colors: [],
+          brands: [],
+          category: [],
+        });
+        setLoading(false);
       }
     };
     fetchData();

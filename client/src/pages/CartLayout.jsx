@@ -23,7 +23,7 @@ const CartLayout = () => {
   }, []);
   const deleteItem = async (id, qty) => {
     try {
-      const response = await Axios.delete(`/cart/delete/${id}`, {
+      const response = await Axios.delete(`/api/v1/cart/delete/${id}`, {
         headers: {
           Authorization: token,
         },
@@ -40,7 +40,7 @@ const CartLayout = () => {
 
   const fetchData = async () => {
     try {
-      const response = await Axios.get("/cart", {
+      const response = await Axios.get("/api/v1/cart", {
         headers: {
           Authorization: token,
         },
@@ -65,7 +65,7 @@ const CartLayout = () => {
     
     try {
       // Validate coupon with Stripe
-      const response = await Axios.get(`/admin/coupons`, {
+      const response = await Axios.get(`/api/v1/admin/coupons`, {
         headers: { Authorization: localStorage.getItem("jwtAdmin") }
       });
       

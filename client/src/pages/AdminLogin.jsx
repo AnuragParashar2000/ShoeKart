@@ -21,7 +21,7 @@ const AdminLogin = () => {
       console.log(response);
 
       if (response.data.success === true) {
-        localStorage.setItem("jwtAdmin", "Bearer " + response.data.token);
+        localStorage.setItem("jwtAdmin", response.data.token);
         setAdmin(response.data.user);
         toast.success("Login successful. Access granted.");
         navigate("/admin");

@@ -48,7 +48,7 @@ const App = () => {
     const fetchUser = async () => {
       try {
         const response = await Axios.get("/verify", {
-          headers: { Authorization: rememberedUserToken },
+          headers: { Authorization: `Bearer ${rememberedUserToken}` },
         });
         if (response.data.success) {
           setAuth(response.data.user);

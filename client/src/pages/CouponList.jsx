@@ -14,9 +14,9 @@ const CouponList = () => {
       if (!token) {
         return toast.error("Access denied. Please login first.");
       }
-      const response = await Axios.get("/admin/coupons", {
+      const response = await Axios.get("/api/v1/admin/coupons", {
         headers: {
-          Authorization: token,
+          Authorization: `Bearer ${token}`,
         },
       });
       console.log(response.data);
@@ -92,11 +92,11 @@ const CouponList = () => {
         return toast.error("Access denied.");
       }
       const response = await Axios.post(
-        "/admin/coupons",
+        "/api/v1/admin/coupons",
         { formData },
         {
           headers: {
-            Authorization: token,
+            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -120,10 +120,10 @@ const CouponList = () => {
         return toast.error("Access denied.");
       }
       const response = await Axios.delete(
-        `/admin/coupons/${formData.name.toUpperCase()}`,
+        `/api/v1/admin/coupons/${formData.name.toUpperCase()}`,
         {
           headers: {
-            Authorization: token,
+            Authorization: `Bearer ${token}`,
           },
         }
       );
